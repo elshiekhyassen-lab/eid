@@ -1,2 +1,2 @@
-# index.html
+# eid
 Eid greeting web page
