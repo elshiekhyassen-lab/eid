@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eid Mubarak</title>
+    <style>
+        body {
+            background-image: url('https://png.pngtree.com/background/20210717/original/pngtree-popular-eid-al-fitr-transparent-background-picture-image_1412458.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 32px;
+            text-shadow: 2px 2px 8px black;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #eidiyaImage {
+            display: none;
+            margin-top: 20px;
+            max-width: 80%;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(255, 223, 0, 0.8);
+        }
+
+        .fireworks, .bubbles {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Eid Mubarak! Welcome to a site designed by Yasso Al Sheikh!</h1>
+    <button onclick="showEidiya()">Click here to get your Eidiya</button>
+    <img id="eidiyaImage" src="https://www.silverrecyclers.com/uploads/blog-images/2001-series-100-dollar-bill.jpg" alt="Eidiya">
+    <canvas class="fireworks" id="fireworksCanvas"></canvas>
+    <canvas class="bubbles" id="bubblesCanvas"></canvas>
+    <audio id="eidMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+    <script>
+        function showEidiya() {
+            document.getElementById('eidiyaImage').style.display = 'block';
+            startFireworks();
+            startBubbles();
+            document.getElementById('eidMusic').play();
+        }
+
+        function startFireworks() {
+            const canvas = document.getElementById("fireworksCanvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const particles = [];
+
+            function Particle(x, y, color, size) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.size = size;
+                this.speedX = (Math.random() - 0.5) * 4;
+                this.speedY = (Math.random() - 0.5) * 4;
+                this.opacity = 1;
+            }
+
+            Particle.prototype.update = function() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.opacity -= 0.02;
+            };
+
+            Particle.prototype.draw = function() {
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            };
+
+            function createFireworks(x, y) {
+                for (let i = 0; i < 30; i++) {
+                    particles.push(new Particle(x, y, `hsl(${Math.random() * 360}, 100%, 60%)`, Math.random() * 5 + 2));
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                    if (particles[i].opacity <= 0) {
+                        particles.splice(i, 1);
+                        i--;
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            createFireworks(window.innerWidth / 2, window.innerHeight / 2);
+            animate();
+        }
+
+        function startBubbles() {
+            const canvas = document.getElementById("bubblesCanvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const bubbles = [];
+
+            function Bubble() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.radius = Math.random() * 10 + 5;
+                this.speed = Math.random() * 2 + 1;
+                this.opacity = Math.random() * 0.5 + 0.5;
+            }
+
+            Bubble.prototype.update = function() {
+                this.y -= this.speed;
+            };
+
+            Bubble.prototype.draw = function() {
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = "rgba(173, 216, 230, 0.7)";
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            };
+
+            function createBubbles() {
+                for (let i = 0; i < 20; i++) {
+                    bubbles.push(new Bubble());
+                }
+            }
+
+            function animateBubbles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < bubbles.length; i++) {
+                    bubbles[i].update();
+                    bubbles[i].draw();
+                    if (bubbles[i].y < -10) {
+                        bubbles.splice(i, 1);
+                        i--;
+                    }
+                }
+                requestAnimationFrame(animateBubbles);
+            }
+
+            createBubbles();
+            animateBubbles();
+        }
+    </script>
+</body>
+</html>
